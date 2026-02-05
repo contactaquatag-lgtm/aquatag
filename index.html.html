@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaTag – Your Brand. Our Water.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #0077b6;
+            --ocean-blue: #023e8a;
+            --sky-blue: #00b4d8;
+            --crystal-blue: #90e0ef;
+            --ice-blue: #caf0f8;
+            --white: #ffffff;
+            --dark-text: #03045e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { line-height: 1.6; color: #333; background-color: var(--white); overflow-x: hidden; }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 119, 182, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo { font-size: 1.7rem; font-weight: 700; color: var(--primary-blue); text-decoration: none; letter-spacing: 1px; display: flex; align-items: center; }
+        .logo i { margin-right: 8px; font-size: 1.4rem; color: var(--sky-blue); }
+
+        .nav-links { display: flex; list-style: none; }
+        .nav-links li { margin-left: 25px; }
+        .nav-links a { text-decoration: none; color: var(--dark-text); font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary-blue); }
+
+        /* Hero Section */
+        .hero {
+            height: 80vh;
+            background: linear-gradient(rgba(2, 62, 138, 0.7), rgba(0, 180, 216, 0.5)), 
+                        url('https://images.unsplash.com/photo-1555529733-0e670560f7e1?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 0 20px;
+        }
+
+        .hero h1 { font-size: 3.5rem; margin-bottom: 10px; font-weight: 800; text-shadow: 2px 4px 10px rgba(0,0,0,0.3); }
+        .hero p { font-size: 1.4rem; margin-bottom: 35px; font-weight: 300; }
+
+        .cta-btn {
+            background: var(--white);
+            color: var(--ocean-blue);
+            padding: 16px 45px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: 0.4s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-btn:hover { background: var(--crystal-blue); transform: translateY(-3px); }
+
+        /* Form Styling */
+        section { padding: 80px 10%; }
+        .section-title { text-align: center; font-size: 2.5rem; color: var(--ocean-blue); margin-bottom: 10px; font-weight: 700; }
+        .section-subtitle { text-align: center; color: var(--sky-blue); margin-bottom: 40px; font-size: 1.1rem; }
+
+        .quotation-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 119, 182, 0.15);
+            border: 1px solid var(--ice-blue);
+        }
+
+        /* Form Grid Layout */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--ocean-blue); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--ice-blue);
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--sky-blue); }
+
+        /* Quantity Grid */
+        .quantity-section {
+            background: var(--ice-blue);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+        .quantity-section h4 { margin-bottom: 15px; color: var(--ocean-blue); font-size: 1rem; border-bottom: 2px solid var(--white); padding-bottom: 5px; }
+        
+        .quantity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .qty-box {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .qty-box span { display: block; font-weight: 700; color: var(--primary-blue); margin-bottom: 8px; }
+        .qty-box input { width: 80px; text-align: center; padding: 8px; border: 1px solid var(--ice-blue); border-radius: 8px; }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--ocean-blue), var(--primary-blue));
+            color: var(--white);
+            border: none;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(2, 62, 138, 0.3);
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(2, 62, 138, 0.4); }
+
+        #form-status {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .success { background: #e0f9f1; color: #1e7e61; border: 1px solid #b2f2df; }
+
+        /* Contact & Footer */
+        .contact-info { text-align: center; background: var(--gray); padding: 60px 10%; }
+        footer { background: var(--dark-text); color: var(--white); text-align: center; padding: 50px 20px; }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            section { padding: 60px 5%; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo"><i class="fas fa-droplet"></i> AquaTag</a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#quotation">Get Quotation</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1>Your Brand. Our Water.</h1>
+        <p>Customized Drinking Water Supply for Offices & Events</p>
+        <a href="#quotation" class="cta-btn">Request a Quote</a>
+    </section>
+
+    <section id="quotation">
+        <h2 class="section-title">Quotation Request</h2>
+        <p class="section-subtitle">Enter your requirements below and our team will contact you shortly.</p>
+        
+        <div class="quotation-container">
+            <form id="aquaForm" action="https://formspree.io/f/mzdaprka" method="POST" enctype="multipart/form-data">
+                
+                <!-- Contact Info Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" name="customer_name" required placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Business / Brand Name</label>
+                        <input type="text" name="brand_name" required placeholder="Company Name">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mobile / WhatsApp Number</label>
+                        <input type="tel" name="whatsapp_number" required placeholder="Contact Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required placeholder="Email">
+                    </div>
+                </div>
+
+                <!-- Quantity Grid Section -->
+                <div class="quantity-section">
+                    <h4>Select Quantities (Enter number of bottles needed)</h4>
+                    <div class="quantity-grid">
+                        <div class="qty-box">
+                            <span>250ml</span>
+                            <input type="number" name="qty_250ml" placeholder="0" min="0">
+                        </div>
+                        <div class="qty-box">
+                            <span>500ml</span>
+                            <input type="number" name="qty_500ml" placeholder="0" min="0">
+                        </div>
+                        <div class="qty-box">
+                            <span>1 Litre</span>
+                            <input type="number" name="qty_1L" placeholder="0" min="0">
+                        </div>
+                        <div class="qty-box">
+                            <span>2 Litre</span>
+                            <input type="number" name="qty_2L" placeholder="0" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logistics Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Preferred Delivery Date</label>
+                        <input type="date" name="delivery_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Brand Logo (Optional)</label>
+                        <input type="file" name="logo_file" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Delivery Address</label>
+                    <textarea name="delivery_address" rows="3" required placeholder="Door No, Building Name, Area, City..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Remarks</label>
+                    <textarea name="remarks" rows="2" placeholder="Any special requests?"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn">Send Request</button>
+            </form>
+            <div id="form-status"></div>
+        </div>
+    </section>
+
+    <section class="contact-info" id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <p><i class="fas fa-envelope"></i> contact.aquatag@gmail.com</p>
+        <p><i class="fab fa-whatsapp"></i> 9961835925, 8590308650</p>
+    </section>
+
+    <footer>
+        <p><strong>AquaTag</strong> - Customized Drinking Water Supply & Label Branding Service</p>
+        <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 10px;">&copy; 2024 AquaTag India. Quality Guaranteed.</p>
+    </footer>
+
+    <script>
+        var form = document.getElementById("aquaForm");
+        
+        async function handleSubmit(event) {
+          event.preventDefault();
+          var status = document.getElementById("form-status");
+          var btn = document.getElementById("submit-btn");
+          var data = new FormData(event.target);
+          
+          btn.disabled = true;
+          btn.innerHTML = "Sending Request...";
+
+          fetch(event.target.action, {
+            method: form.method,
+            body: data,
+            headers: { 'Accept': 'application/json' }
+          }).then(response => {
+            if (response.ok) {
+              status.innerHTML = "<i class='fas fa-check-circle'></i> Thank you! Our team will contact you shortly with the quotation.";
+              status.className = "success";
+              status.style.display = "block";
+              form.reset();
+              form.style.display = "none";
+            } else {
+              status.innerHTML = "Error. Please check the fields and try again.";
+              status.style.display = "block";
+              btn.disabled = false;
+              btn.innerHTML = "Send Request";
+            }
+          }).catch(error => {
+            status.innerHTML = "Oops! Something went wrong.";
+            status.style.display = "block";
+            btn.disabled = false;
+          });
+        }
+        form.addEventListener("submit", handleSubmit)
+    </script>
+</body>
+</html>
