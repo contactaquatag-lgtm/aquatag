@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AquaTag Test</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#f2fbff}
+
+header{
+background:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+
+.loginbtn{
+background:#02025c;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:20px;
+cursor:pointer
+}
+
+.hero{
+height:250px;
+background:linear-gradient(90deg,#7b82dd,#9de0f2);
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:30px
+}
+
+.overlay{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,.6);
+display:none;
+align-items:center;
+justify-content:center
+}
+
+.box{
+background:white;
+padding:25px;
+border-radius:10px;
+width:300px
+}
+
+input{width:100%;padding:10px;margin:10px 0}
+
+button{width:100%;padding:10px;background:#02025c;color:white;border:none}
+</style>
+</head>
+
+<body>
+
+<header>
+<b>AquaTag</b>
+<button class="loginbtn" onclick="openLogin()">Customer Login</button>
+</header>
+
+<div class="hero">Your Brand. Our Water.</div>
+
+<div id="login" class="overlay">
+<div class="box">
+<h3>LOGIN</h3>
+<input placeholder="Email">
+<input type="password" placeholder="Password">
+<button>Login</button>
+<p onclick="openSignup()" style="cursor:pointer">Create Account</p>
+<button style="background:red" onclick="closeAll()">Close</button>
+</div>
+</div>
+
+<div id="signup" class="overlay">
+<div class="box">
+<h3>SIGNUP</h3>
+<input placeholder="Email">
+<input type="password" placeholder="Password">
+<button>Register</button>
+<button style="background:red" onclick="closeAll()">Close</button>
+</div>
+</div>
+
+<script>
+function openLogin(){
+document.getElementById("login").style.display="flex";
+}
+
+function openSignup(){
+document.getElementById("login").style.display="none";
+document.getElementById("signup").style.display="flex";
+}
+
+function closeAll(){
+document.getElementById("login").style.display="none";
+document.getElementById("signup").style.display="none";
+}
+</script>
+
+</body>
+</html>
