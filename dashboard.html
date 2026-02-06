@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AquaTag Login</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+</head>
+
+<body style="font-family:Arial;text-align:center;margin-top:100px">
+
+<h2>AquaTag Customer Login</h2>
+
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="signup()">Signup</button>
+<button onclick="login()">Login</button>
+
+<p id="msg"></p>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
+  authDomain: "aquatag-ef3cd.firebaseapp.com",
+  projectId: "aquatag-ef3cd",
+  storageBucket: "aquatag-ef3cd.appspot.com",
+  messagingSenderId: "93922635895",
+  appId: "1:93922635895:web:ab716bac5c204bd69a9672"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+function signup(){
+auth.createUserWithEmailAndPassword(email.value,password.value)
+.then(()=>msg.innerHTML="Account created!")
+.catch(e=>msg.innerHTML=e.message);
+}
+
+function login(){
+auth.signInWithEmailAndPassword(email.value,password.value)
+.then(()=>location.href="orders.html")
+.catch(e=>msg.innerHTML=e.message);
+}
+</script>
+
+</body>
+</html>
