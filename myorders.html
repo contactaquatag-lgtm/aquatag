@@ -1,15 +1,50 @@
 <!DOCTYPE html>
-<html>
-<body style="font-family:Arial;padding:40px">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AquaTag Orders</title>
 
-<h2>My Orders</h2>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<input id="qty" placeholder="Bottle Quantity">
-<button onclick="place()">Place Order</button>
+<style>
+:root { --primary:#0077b6; --ocean:#03045e; --sky:#00b4d8; --crystal:#caf0f8; }
+*{font-family:Poppins;margin:0;padding:0;box-sizing:border-box}
+body{background:#f0faff;padding:40px}
 
-<hr>
+.container{max-width:800px;margin:auto;background:white;padding:40px;border-radius:30px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+input,textarea{width:100%;padding:12px;border:2px solid var(--crystal);border-radius:10px}
+.quantity{background:var(--crystal);padding:20px;border-radius:15px;margin:20px 0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.box{background:white;padding:10px;border-radius:10px;text-align:center}
+button{width:100%;background:var(--ocean);color:white;padding:15px;border:none;border-radius:12px;font-weight:700}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Place Order</h2>
+
+<div class="quantity">
+<div class="grid">
+<div class="box">250ml<input id="q250" type="number"></div>
+<div class="box">500ml<input id="q500" type="number"></div>
+<div class="box">1L<input id="q1" type="number"></div>
+<div class="box">2L<input id="q2" type="number"></div>
+</div>
+</div>
+
+<textarea id="address" placeholder="Delivery Address"></textarea><br><br>
+
+<button onclick="place()">Submit Order</button>
+
+<hr><br>
 
 <div id="list"></div>
+
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -27,19 +62,20 @@ const db=firebase.firestore();
 
 function place(){
 auth.onAuthStateChanged(u=>{
-if(!u){alert("Login again");return;}
+let id="AQ"+Date.now();
 
-let oid="AQ"+Date.now();
-
-db.collection("orders").doc(oid).set({
-orderId:oid,
+db.collection("orders").doc(id).set({
+orderId:id,
 uid:u.uid,
-qty:qty.value,
-status:"Pending",
-created:new Date()
+q250:q250.value,
+q500:q500.value,
+q1:q1.value,
+q2:q2.value,
+address:address.value,
+status:"Pending"
 });
 
-alert("Order "+oid+" placed");
+alert("Order "+id+" placed");
 });
 }
 
@@ -49,10 +85,7 @@ db.collection("orders").where("uid","==",u.uid)
 list.innerHTML="";
 s.forEach(d=>{
 let o=d.data();
-list.innerHTML+=`
-<p>
-<b>${o.orderId}</b> | Qty:${o.qty} | ${o.status}
-</p>`;
+list.innerHTML+=`<p>${o.orderId} | ${o.status}</p>`;
 });
 });
 });
