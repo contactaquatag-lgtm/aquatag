@@ -1,25 +1,38 @@
-<h2>Admin Panel</h2>
-<div id="data"></div>
-
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
 firebase.initializeApp({
- apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
- projectId:"aquatag-ef3cd"
+  apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
+  authDomain:"aquatag-ef3cd.firebaseapp.com",
+  projectId:"aquatag-ef3cd"
 });
 
-firebase.firestore().collection("orders")
-.onSnapshot(s=>{
-data.innerHTML="";
-s.forEach(d=>{
-let o=d.data();
-data.innerHTML+=`
-<p>
-${o.orderId} | ${o.qty} | ${o.status}
-<button onclick="firebase.firestore().collection('orders').doc('${o.orderId}').update({status:'Delivered'})">Deliver</button>
-</p>`;
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* 🔐 Only this email can open admin */
+auth.onAuthStateChanged(u=>{
+  if(!u || u.email !== "contact.aquatag@gmail.com"){
+    location.href="dashboard.html";
+  }
 });
+
+/* Admin orders */
+db.collection("orders").onSnapshot(s=>{
+  data.innerHTML="";
+  s.forEach(d=>{
+    let o=d.data();
+    data.innerHTML+=`
+      <p>
+        ${o.orderId}
+        <select onchange="db.collection('orders').doc('${o.orderId}').update({status:this.value})">
+          <option ${o.status=="Pending"?"selected":""}>Pending</option>
+          <option ${o.status=="Printing"?"selected":""}>Printing</option>
+          <option ${o.status=="Delivered"?"selected":""}>Delivered</option>
+        </select>
+      </p>`;
+  });
 });
 </script>
