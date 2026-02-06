@@ -6,11 +6,26 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#f2fbff}
-header{padding:15px;background:white;display:flex;justify-content:space-between}
-.loginbtn{background:#02025c;color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer}
+
+header{
+background:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+
+.loginbtn{
+background:#02025c;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:20px;
+cursor:pointer
+}
 
 .hero{
-height:260px;
+height:280px;
 background:linear-gradient(90deg,#7b82dd,#9de0f2);
 display:flex;
 flex-direction:column;
@@ -19,21 +34,41 @@ justify-content:center;
 color:white
 }
 
-.hero h1{margin:0;font-size:34px}
-.hero p{margin:6px}
-
 .section{text-align:center;padding:30px}
 
 .cards{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
 .card{background:white;padding:20px;border-radius:10px;width:200px}
 
-.footer{background:#02025c;color:white;text-align:center;padding:10px;margin-top:40px}
+.footer{background:#02025c;color:white;text-align:center;padding:10px}
 
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center}
-.box{background:white;padding:25px;border-radius:12px;width:330px}
+.overlay{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,.5);
+display:none;
+align-items:center;
+justify-content:center
+}
+
+.box{
+background:white;
+padding:25px;
+border-radius:12px;
+width:320px
+}
 
 input{width:100%;padding:10px;margin:8px 0}
-button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:8px;background:#02025c;color:white}
+
+button{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+background:#02025c;
+color:white
+}
 
 .red{text-align:center;color:red}
 .green{text-align:center;color:green}
@@ -82,8 +117,8 @@ button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:8px;bac
 <input id="loginPass" type="password" placeholder="Password">
 <div id="loginMsg" class="red"></div>
 <button onclick="login()">Login</button>
-<button onclick="googleLogin()">Login with Google</button>
-<p style="text-align:center;cursor:pointer" onclick="openSignup()">Create Account</p>
+<button onclick="googleLogin()">Google Login</button>
+<p onclick="openSignup()" style="cursor:pointer;text-align:center">Create Account</p>
 <button style="background:red" onclick="closeAll()">Close</button>
 </div>
 </div>
@@ -96,11 +131,10 @@ button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:8px;bac
 <input id="signPass" type="password" placeholder="Password">
 <div id="signMsg" class="green"></div>
 <button onclick="register()">Register</button>
-<button onclick="closeAll()">Close</button>
+<button style="background:red" onclick="closeAll()">Close</button>
 </div>
 </div>
 
-<!-- CUSTOMER -->
 <div id="customer" style="display:none;padding:20px">
 <h2>Customer Dashboard</h2>
 <input id="qty" placeholder="Bottle Quantity">
@@ -108,7 +142,6 @@ button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:8px;bac
 <div id="orders"></div>
 </div>
 
-<!-- ADMIN -->
 <div id="admin" style="display:none;padding:20px">
 <h2>Admin Panel</h2>
 <div id="users"></div>
@@ -144,13 +177,12 @@ window.closeAll=()=>{loginModal.style.display="none";signupModal.style.display="
 window.register=async()=>{
 const u=await createUserWithEmailAndPassword(auth,signEmail.value,signPass.value);
 await setDoc(doc(db,"users",u.user.uid),{email:u.user.email,approved:false});
-signMsg.innerHTML="Account created. Waiting for admin approval.";
+signMsg.innerHTML="Waiting for admin approval";
 }
 
 window.login=async()=>{
-try{
-await signInWithEmailAndPassword(auth,loginEmail.value,loginPass.value);
-}catch(e){loginMsg.innerHTML=e.message;}
+try{await signInWithEmailAndPassword(auth,loginEmail.value,loginPass.value);}
+catch(e){loginMsg.innerHTML=e.message;}
 }
 
 window.googleLogin=async()=>{
@@ -173,11 +205,7 @@ const snap=await getDocs(collection(db,"users"));
 users.innerHTML="";
 snap.forEach(d=>{
 const u=d.data();
-users.innerHTML+=`
-<div class="card">
-${u.email} — ${u.approved?"Approved":"Pending"}
-${!u.approved?`<button onclick="approve('${d.id}')">Approve</button>`:""}
-</div>`;
+users.innerHTML+=`<div class="card">${u.email} ${!u.approved?`<button onclick="approve('${d.id}')">Approve</button>`:""}</div>`;
 });
 return;
 }
@@ -199,7 +227,7 @@ loadOrders(auth.currentUser.uid);
 async function loadOrders(uid){
 const snap=await getDocs(collection(db,"orders"));
 orders.innerHTML="";
-snap.forEach(o=>{if(o.data().uid===uid)orders.innerHTML+=`<div class="card">Qty:${o.data().qty} | ${o.data().status}</div>`});
+snap.forEach(o=>{if(o.data().uid===uid)orders.innerHTML+=`<div class="card">Qty:${o.data().qty}</div>`});
 }
 
 </script>
