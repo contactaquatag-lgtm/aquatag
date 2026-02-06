@@ -1,3 +1,6 @@
+<h2>Admin Panel</h2>
+<div id="data"></div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
@@ -9,15 +12,13 @@ firebase.initializeApp({
 
 firebase.firestore().collection("orders")
 .onSnapshot(s=>{
-document.body.innerHTML="";
+data.innerHTML="";
 s.forEach(d=>{
 let o=d.data();
-document.body.innerHTML+=`
+data.innerHTML+=`
 <p>
 ${o.orderId} | ${o.qty} | ${o.status}
-<button onclick="firebase.firestore().collection('orders').doc('${o.orderId}').update({status:'Delivered'})">
-Deliver
-</button>
+<button onclick="firebase.firestore().collection('orders').doc('${o.orderId}').update({status:'Delivered'})">Deliver</button>
 </p>`;
 });
 });
