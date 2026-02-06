@@ -9,18 +9,20 @@ body{margin:0;font-family:Arial;background:#f2fbff}
 header{padding:15px;background:white}
 .loginbtn{float:right;background:#02025c;color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer}
 
-.hero{height:250px;background:linear-gradient(90deg,#7b82dd,#9de0f2);display:flex;align-items:center;justify-content:center;color:white;font-size:32px}
+.hero{height:220px;background:linear-gradient(90deg,#7b82dd,#9de0f2);display:flex;align-items:center;justify-content:center;color:white;font-size:30px}
 
-.box{background:white;padding:25px;border-radius:12px;width:320px}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center}
+.box{background:white;padding:25px;border-radius:12px;width:330px}
 
 input{width:100%;padding:10px;margin:8px 0}
 button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:8px;background:#02025c;color:white}
 
-.red{color:red;text-align:center}
-.green{color:green;text-align:center}
+.red{text-align:center;color:red}
+.green{text-align:center;color:green}
 
-.footer{background:#02025c;color:white;text-align:center;padding:10px}
+.card{background:white;padding:15px;border-radius:10px;margin:10px}
+
+.footer{background:#02025c;color:white;text-align:center;padding:10px;margin-top:40px}
 </style>
 </head>
 
@@ -31,9 +33,9 @@ AquaTag
 <button class="loginbtn" onclick="openLogin()">Customer Login</button>
 </header>
 
+<div id="home">
 <div class="hero">Your Brand. Our Water.</div>
-
-<div class="footer">AquaTag India – contact.aquatag@gmail.com – 9961835925</div>
+</div>
 
 <!-- LOGIN -->
 <div id="loginModal" class="overlay">
@@ -44,7 +46,7 @@ AquaTag
 <div id="loginMsg" class="red"></div>
 <button onclick="login()">Login</button>
 <button onclick="googleLogin()">Login with Google</button>
-<p onclick="openSignup()" style="text-align:center;cursor:pointer">Create Account</p>
+<p style="text-align:center;cursor:pointer" onclick="openSignup()">Create Account</p>
 <button style="background:red" onclick="closeAll()">Close</button>
 </div>
 </div>
@@ -61,6 +63,22 @@ AquaTag
 </div>
 </div>
 
+<!-- CUSTOMER -->
+<div id="customer" style="display:none;padding:20px">
+<h3>Customer Dashboard</h3>
+<input id="qty" placeholder="Bottle Quantity">
+<button onclick="placeOrder()">Place Order</button>
+<div id="orders"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" style="display:none;padding:20px">
+<h3>Admin Panel</h3>
+<div id="users"></div>
+</div>
+
+<div class="footer">AquaTag India – contact.aquatag@gmail.com – 9961835925</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -75,79 +93,102 @@ onAuthStateChanged
 
 import {
 getFirestore,
-doc,setDoc,getDoc
+doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-apiKey: "AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
-authDomain: "aquatag-ef3cd.firebaseapp.com",
-projectId: "aquatag-ef3cd",
-storageBucket: "aquatag-ef3cd.appspot.com",
-messagingSenderId: "93922635895",
-appId: "1:93922635895:web:ab716bac5c204bd69a9672"
+const firebaseConfig={
+apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
+authDomain:"aquatag-ef3cd.firebaseapp.com",
+projectId:"aquatag-ef3cd",
+storageBucket:"aquatag-ef3cd.appspot.com",
+messagingSenderId:"93922635895",
+appId:"1:93922635895:web:ab716bac5c204bd69a9672"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
 const ADMIN="contact.aquatag@gmail.com";
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
 
 window.openLogin=()=>loginModal.style.display="flex";
 window.openSignup=()=>{loginModal.style.display="none";signupModal.style.display="flex";}
 window.closeAll=()=>{loginModal.style.display="none";signupModal.style.display="none";}
 
 window.register=async()=>{
-const e=signEmail.value;
-const p=signPass.value;
-
-const u=await createUserWithEmailAndPassword(auth,e,p);
-
-await setDoc(doc(db,"users",u.user.uid),{
-email:e,
-approved:false
-});
-
+const u=await createUserWithEmailAndPassword(auth,signEmail.value,signPass.value);
+await setDoc(doc(db,"users",u.user.uid),{email:u.user.email,approved:false});
 signMsg.innerHTML="Account created. Waiting for admin approval.";
 }
 
 window.login=async()=>{
 try{
-const e=loginEmail.value;
-const p=loginPass.value;
-const u=await signInWithEmailAndPassword(auth,e,p);
-
-if(e===ADMIN){location="admin.html";return;}
-
-const snap=await getDoc(doc(db,"users",u.user.uid));
-if(!snap.data().approved){
-loginMsg.innerHTML="Waiting for admin approval";
-return;
-}
-
-location="myorders.html";
-
-}catch(err){
-loginMsg.innerHTML=err.message;
-}
+await signInWithEmailAndPassword(auth,loginEmail.value,loginPass.value);
+}catch(e){loginMsg.innerHTML=e.message;}
 }
 
 window.googleLogin=async()=>{
-const prov=new GoogleAuthProvider();
-const u=await signInWithPopup(auth,prov);
-
-await setDoc(doc(db,"users",u.user.uid),{
-email:u.user.email,
-approved:false
-},{merge:true});
-
+const p=new GoogleAuthProvider();
+const u=await signInWithPopup(auth,p);
+await setDoc(doc(db,"users",u.user.uid),{email:u.user.email,approved:false},{merge:true});
 alert("Waiting for admin approval");
 }
 
-onAuthStateChanged(auth,u=>{
-if(!u)return;
-if(u.email===ADMIN)location="admin.html";
+onAuthStateChanged(auth,async user=>{
+if(!user)return;
+
+home.style.display="none";
+loginModal.style.display="none";
+signupModal.style.display="none";
+
+if(user.email===ADMIN){
+admin.style.display="block";
+
+const snap=await getDocs(collection(db,"users"));
+users.innerHTML="";
+snap.forEach(d=>{
+const u=d.data();
+users.innerHTML+=`
+<div class="card">
+${u.email} — ${u.approved?"Approved":"Pending"}
+${!u.approved?`<button onclick="approve('${d.id}')">Approve</button>`:""}
+</div>`;
 });
+return;
+}
+
+const snap=await getDoc(doc(db,"users",user.uid));
+if(!snap.data().approved){
+alert("Waiting for admin approval");
+return;
+}
+
+customer.style.display="block";
+loadOrders(user.uid);
+});
+
+window.approve=async(id)=>{
+await updateDoc(doc(db,"users",id),{approved:true});
+location.reload();
+}
+
+window.placeOrder=async()=>{
+await addDoc(collection(db,"orders"),{
+uid:auth.currentUser.uid,
+qty:qty.value,
+status:"Pending"
+});
+loadOrders(auth.currentUser.uid);
+}
+
+async function loadOrders(uid){
+const snap=await getDocs(collection(db,"orders"));
+orders.innerHTML="";
+snap.forEach(o=>{
+if(o.data().uid===uid)
+orders.innerHTML+=`<div class="card">Qty:${o.data().qty} | ${o.data().status}</div>`;
+});
+}
 
 </script>
 
