@@ -1,39 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AquaTag Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body style="font-family:Poppins;padding:40px">
+
+<h2>AquaTag Admin Panel</h2>
+
+<div id="data"></div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
 firebase.initializeApp({
-  apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
-  authDomain:"aquatag-ef3cd.firebaseapp.com",
-  projectId:"aquatag-ef3cd"
+ apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
+ authDomain:"aquatag-ef3cd.firebaseapp.com",
+ projectId:"aquatag-ef3cd"
 });
 
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* 🔐 Only this email can open admin */
+/* 🔐 Admin security */
 auth.onAuthStateChanged(u=>{
-  if(!u || u.email !== "contact.aquatag@gmail.com"){
-    location.href="/aquatag/dashboard.html";
-  }
+ if(!u || u.email !== "contact.aquatag@gmail.com"){
+   location.href="/aquatag/dashboard.html";
+ }
 });
 
-/* Admin orders */
+/* Load Orders */
 db.collection("orders").onSnapshot(s=>{
-  data.innerHTML="";
-  s.forEach(d=>{
-    let o=d.data();
-    data.innerHTML+=`
-      <p>
-        ${o.orderId}
-        <select onchange="db.collection('orders').doc('${o.orderId}').update({status:this.value})">
-          <option ${o.status=="Pending"?"selected":""}>Pending</option>
-          <option ${o.status=="Printing"?"selected":""}>Printing</option>
-          <option ${o.status=="Delivered"?"selected":""}>Delivered</option>
-        </select>
-      </p>`;
-  });
+ document.getElementById("data").innerHTML="";
+ s.forEach(d=>{
+   let o=d.data();
+   document.getElementById("data").innerHTML+=`
+     <p>
+       <b>${o.orderId}</b>
+       <select onchange="db.collection('orders').doc('${o.orderId}').update({status:this.value})">
+         <option ${o.status=="Pending"?"selected":""}>Pending</option>
+         <option ${o.status=="Printing"?"selected":""}>Printing</option>
+         <option ${o.status=="Delivered"?"selected":""}>Delivered</option>
+       </select>
+     </p>`;
+ });
 });
 </script>
 
+</body>
+</html>
