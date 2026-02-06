@@ -1,48 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>AquaTag Orders</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>AquaTag Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root { --primary:#0077b6; --ocean:#03045e; --sky:#00b4d8; --crystal:#caf0f8; }
-*{font-family:Poppins;margin:0;padding:0;box-sizing:border-box}
-body{background:#f0faff;padding:40px}
-
-.container{max-width:800px;margin:auto;background:white;padding:40px;border-radius:30px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-input,textarea{width:100%;padding:12px;border:2px solid var(--crystal);border-radius:10px}
-.quantity{background:var(--crystal);padding:20px;border-radius:15px;margin:20px 0}
+body{font-family:Poppins;background:#f0faff}
+.card{max-width:800px;margin:40px auto;background:white;padding:30px;border-radius:20px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.box{background:white;padding:10px;border-radius:10px;text-align:center}
-button{width:100%;background:var(--ocean);color:white;padding:15px;border:none;border-radius:12px;font-weight:700}
+.box{background:#caf0f8;padding:10px;border-radius:10px;text-align:center}
+input{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc}
+button{width:100%;margin-top:15px;background:#03045e;color:white;padding:12px;border:none;border-radius:10px;font-weight:700}
+.badge{padding:4px 10px;border-radius:50px;font-size:12px}
+.Pending{background:#fff3cd}
+.Printing{background:#d1ecf1}
+.Delivered{background:#d4edda}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
 
 <h2>Place Order</h2>
 
-<div class="quantity">
 <div class="grid">
-<div class="box">250ml<input id="q250" type="number"></div>
-<div class="box">500ml<input id="q500" type="number"></div>
-<div class="box">1L<input id="q1" type="number"></div>
-<div class="box">2L<input id="q2" type="number"></div>
+<div class="box">250ml<input id="q250"></div>
+<div class="box">500ml<input id="q500"></div>
+<div class="box">1L<input id="q1"></div>
+<div class="box">2L<input id="q2"></div>
 </div>
-</div>
 
-<textarea id="address" placeholder="Delivery Address"></textarea><br><br>
+<textarea id="address" placeholder="Delivery Address" style="width:100%;margin-top:10px"></textarea>
 
-<button onclick="place()">Submit Order</button>
+<button onclick="place()">Submit</button>
 
-<hr><br>
+<hr>
 
+<h3>My Orders</h3>
 <div id="list"></div>
+
+<button onclick="logout()">Logout</button>
 
 </div>
 
@@ -63,7 +61,6 @@ const db=firebase.firestore();
 function place(){
 auth.onAuthStateChanged(u=>{
 let id="AQ"+Date.now();
-
 db.collection("orders").doc(id).set({
 orderId:id,
 uid:u.uid,
@@ -74,7 +71,6 @@ q2:q2.value,
 address:address.value,
 status:"Pending"
 });
-
 alert("Order "+id+" placed");
 });
 }
@@ -85,10 +81,20 @@ db.collection("orders").where("uid","==",u.uid)
 list.innerHTML="";
 s.forEach(d=>{
 let o=d.data();
-list.innerHTML+=`<p>${o.orderId} | ${o.status}</p>`;
+list.innerHTML+=`
+<p>
+<b>${o.orderId}</b>
+ | 250:${o.q250} 500:${o.q500} 1L:${o.q1} 2L:${o.q2}
+ <span class="badge ${o.status}">${o.status}</span>
+</p>`;
 });
 });
 });
+
+function logout(){
+auth.signOut();
+location.href="dashboard.html";
+}
 </script>
 
 </body>
