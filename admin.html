@@ -15,7 +15,7 @@ const db = firebase.firestore();
 /* 🔐 Only this email can open admin */
 auth.onAuthStateChanged(u=>{
   if(!u || u.email !== "contact.aquatag@gmail.com"){
-    location.href="dashboard.html";
+    location.href="/aquatag/dashboard.html";
   }
 });
 
@@ -36,3 +36,4 @@ db.collection("orders").onSnapshot(s=>{
   });
 });
 </script>
+
