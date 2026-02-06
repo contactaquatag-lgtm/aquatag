@@ -1,0 +1,43 @@
+<h2>My Orders</h2>
+<input id="qty" placeholder="Bottle Quantity">
+<button onclick="place()">Place Order</button>
+
+<div id="list"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+ apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
+ projectId:"aquatag-ef3cd"
+});
+
+const auth=firebase.auth();
+const db=firebase.firestore();
+
+function place(){
+auth.onAuthStateChanged(u=>{
+let id="AQ"+Date.now();
+db.collection("orders").doc(id).set({
+orderId:id,
+uid:u.uid,
+qty:qty.value,
+status:"Pending"
+});
+alert(id+" placed");
+});
+}
+
+auth.onAuthStateChanged(u=>{
+db.collection("orders").where("uid","==",u.uid)
+.onSnapshot(s=>{
+list.innerHTML="";
+s.forEach(d=>{
+let o=d.data();
+list.innerHTML+=`<p>${o.orderId} | ${o.qty} | ${o.status}</p>`;
+});
+});
+});
+</script>
