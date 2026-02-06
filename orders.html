@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
-<body>
+<head>
+<title>AquaTag Orders</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
 
-<h2>Place Order</h2>
+<body style="font-family:Arial;padding:40px">
+
+<h2>Place New Order</h2>
 
 <input id="qty" placeholder="Bottle Quantity">
 <button onclick="place()">Submit</button>
 
+<h3>Your Orders</h3>
 <div id="list"></div>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
 firebase.initializeApp({
@@ -20,20 +24,45 @@ firebase.initializeApp({
  projectId:"aquatag-ef3cd"
 });
 
-const db=firebase.firestore();
 const auth=firebase.auth();
+const db=firebase.firestore();
 
 function place(){
 auth.onAuthStateChanged(u=>{
-db.collection("orders").add({
+if(!u){alert("Login again"); return;}
+
+let id="AQ"+Date.now();
+
+db.collection("orders").doc(id).set({
+orderId:id,
 uid:u.uid,
 qty:qty.value,
 status:"Pending",
 date:new Date()
 });
-alert("Order saved");
+
+alert("Order "+id+" placed!");
+load();
 });
 }
+
+function load(){
+auth.onAuthStateChanged(u=>{
+db.collection("orders").where("uid","==",u.uid)
+.onSnapshot(s=>{
+list.innerHTML="";
+s.forEach(d=>{
+let o=d.data();
+list.innerHTML+=`
+<p>
+<b>${o.orderId}</b> | Qty:${o.qty} | Status:${o.status}
+</p>`;
+});
+});
+});
+}
+
+load();
 </script>
 
 </body>
