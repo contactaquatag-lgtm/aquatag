@@ -1,6 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial;padding:40px">
+
 <h2>My Orders</h2>
+
 <input id="qty" placeholder="Bottle Quantity">
 <button onclick="place()">Place Order</button>
+
+<hr>
 
 <div id="list"></div>
 
@@ -11,6 +18,7 @@
 <script>
 firebase.initializeApp({
  apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
+ authDomain:"aquatag-ef3cd.firebaseapp.com",
  projectId:"aquatag-ef3cd"
 });
 
@@ -19,14 +27,19 @@ const db=firebase.firestore();
 
 function place(){
 auth.onAuthStateChanged(u=>{
-let id="AQ"+Date.now();
-db.collection("orders").doc(id).set({
-orderId:id,
+if(!u){alert("Login again");return;}
+
+let oid="AQ"+Date.now();
+
+db.collection("orders").doc(oid).set({
+orderId:oid,
 uid:u.uid,
 qty:qty.value,
-status:"Pending"
+status:"Pending",
+created:new Date()
 });
-alert(id+" placed");
+
+alert("Order "+oid+" placed");
 });
 }
 
@@ -36,8 +49,14 @@ db.collection("orders").where("uid","==",u.uid)
 list.innerHTML="";
 s.forEach(d=>{
 let o=d.data();
-list.innerHTML+=`<p>${o.orderId} | ${o.qty} | ${o.status}</p>`;
+list.innerHTML+=`
+<p>
+<b>${o.orderId}</b> | Qty:${o.qty} | ${o.status}
+</p>`;
 });
 });
 });
 </script>
+
+</body>
+</html>
