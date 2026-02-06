@@ -2,11 +2,23 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp({
+ apiKey:"AIzaSyDqhSH9crtmW5iEA-hsFudxHng4pZw860g",
+ projectId:"aquatag-ef3cd"
+});
+
 firebase.firestore().collection("orders")
 .onSnapshot(s=>{
+document.body.innerHTML="";
 s.forEach(d=>{
-document.body.innerHTML+=JSON.stringify(d.data())+"<hr>";
+let o=d.data();
+document.body.innerHTML+=`
+<p>
+${o.orderId} | ${o.qty} | ${o.status}
+<button onclick="firebase.firestore().collection('orders').doc('${o.orderId}').update({status:'Delivered'})">
+Deliver
+</button>
+</p>`;
 });
 });
 </script>
